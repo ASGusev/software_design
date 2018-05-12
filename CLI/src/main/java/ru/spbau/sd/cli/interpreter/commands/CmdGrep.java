@@ -13,7 +13,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+/**
+ * Searches for a given pattern in one or more files and prints lines containing
+ * matches. If no files are provided, the input stream is used.
+ *
+ * Arguments: the first argument is the pattern to search. It may be a plain string
+ * of a regular expression. Other arguments are paths to files to search in.
+ *
+ * Supported options:
+ *
+ * -i - ignore case
+ *
+ * -w - search for complete words
+ *
+ * -A n - show n lines after each matched line
+ */
 public class CmdGrep implements Command {
     private static final String KEY_IGNORE_CASE = "i";
     private static final String KEY_WORDS = "w";
@@ -21,29 +37,31 @@ public class CmdGrep implements Command {
     private static final String MSG_MISSING_PATTERN = "Pattern is missing.";
     private static final String MSG_INCORRECT_A_VALUE = "Incorrect A value.";
 
-    private void grepLine(String line, Pattern pattern, boolean ignoreCase,
-                          OutputStream outputStream, int aggregateLines,
-                          int[] aggregateRest) {
-        String testLine = ignoreCase ? line.toLowerCase() : line;
-        Matcher matcher = pattern.matcher(testLine);
-        if (matcher.find()) {
-            outputStream.write(line + '\n');
-            aggregateRest[0] = aggregateLines;
-        } else if (aggregateRest[0] > 0) {
-            outputStream.write(line + '\n');
-            aggregateRest[0]--;
-        }
+    private void grepStream(Stream<String> lines, Pattern pattern,
+                            boolean ignoreCase, int aggregateLines,
+                            OutputStream outputStream) {
+        int[] aggregateRest = { 0 };
+        lines.forEach((line) ->
+                {
+                    String testLine = ignoreCase ? line.toLowerCase() : line;
+                    Matcher matcher = pattern.matcher(testLine);
+                    if (matcher.find()) {
+                        outputStream.write(line + '\n');
+                        aggregateRest[0] = aggregateLines;
+                    } else if (aggregateRest[0] > 0) {
+                        outputStream.write(line + '\n');
+                        aggregateRest[0]--;
+                    }
+                }
+        );
     }
 
     private void grepFile(String filename, Pattern pattern, boolean ignoreCase,
                           int aggregateLines, OutputStream outputStream) {
         try {
-            int[] aggregateRest = { 0 };
             Path filepath = Paths.get(filename);
-            Files.lines(filepath).forEach((line) ->
-                grepLine(line, pattern, ignoreCase, outputStream, aggregateLines,
-                        aggregateRest)
-            );
+            Stream<String> lines = Files.lines(filepath);
+            grepStream(lines, pattern, ignoreCase, aggregateLines, outputStream);
         } catch (IOException e) {
             outputStream.write(e.getMessage());
         }
@@ -51,11 +69,8 @@ public class CmdGrep implements Command {
 
     private void grepText(String text, Pattern pattern, boolean ignoreCase,
                           int aggregateLines, OutputStream outputStream) {
-        int[] aggregateRest = { 0 };
-        Arrays.stream(text.split("\n"))
-                .forEach((line) -> grepLine(line, pattern, ignoreCase,
-                        outputStream, aggregateLines,aggregateRest)
-                );
+        Stream<String> lines = Arrays.stream(text.split("\n"));
+        grepStream(lines, pattern, ignoreCase, aggregateLines, outputStream);
     }
 
     @Override

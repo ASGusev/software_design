@@ -76,12 +76,12 @@ public class CmdGrep implements Command {
     @Override
     public ExecutionResult run(List<String> arguments, InputStream inputStream, OutputStream outputStream) {
         Options options = new Options();
-        Option opt_ignore_case = Option.builder(KEY_IGNORE_CASE).build();
-        Option opt_words = Option.builder(KEY_WORDS).build();
-        Option opt_aggregate = Option.builder(KEY_AGGREGATE).hasArg().build();
-        options.addOption(opt_ignore_case);
-        options.addOption(opt_words);
-        options.addOption(opt_aggregate);
+        Option optIgnoreCase = Option.builder(KEY_IGNORE_CASE).build();
+        Option optWords = Option.builder(KEY_WORDS).build();
+        Option optAggregate = Option.builder(KEY_AGGREGATE).hasArg().build();
+        options.addOption(optIgnoreCase);
+        options.addOption(optWords);
+        options.addOption(optAggregate);
 
         CommandLineParser parser = new DefaultParser();
         CommandLine commandLine;

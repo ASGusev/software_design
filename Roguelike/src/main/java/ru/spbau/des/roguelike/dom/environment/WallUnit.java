@@ -1,7 +1,6 @@
-package ru.spbau.des.roguelike.dom.field;
+package ru.spbau.des.roguelike.dom.environment;
 
 import ru.spbau.des.roguelike.dom.equipment.Item;
-import ru.spbau.des.roguelike.dom.base.Unit;
 
 public class WallUnit implements Unit {
     private boolean destructible;

@@ -1,7 +1,7 @@
 package ru.spbau.des.roguelike.dom.equipment;
 
-import ru.spbau.des.roguelike.dom.base.HitReturn;
-import ru.spbau.des.roguelike.dom.base.Unit;
+import ru.spbau.des.roguelike.dom.environment.HitResult;
+import ru.spbau.des.roguelike.dom.environment.Unit;
 
 public class BoxUnit implements Unit {
     private final Item item;
@@ -13,7 +13,7 @@ public class BoxUnit implements Unit {
     }
 
     @Override
-    public HitReturn takeHit(int strength) {
+    public HitResult takeHit(int strength) {
         dead = true;
         return item;
     }

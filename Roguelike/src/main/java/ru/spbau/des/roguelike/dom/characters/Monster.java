@@ -1,11 +1,11 @@
 package ru.spbau.des.roguelike.dom.characters;
 
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.HitReturn;
-import ru.spbau.des.roguelike.dom.base.Position;
-import ru.spbau.des.roguelike.dom.base.Unit;
-import ru.spbau.des.roguelike.dom.field.DistanceNavigator;
-import ru.spbau.des.roguelike.dom.field.Field;
+import ru.spbau.des.roguelike.dom.environment.Direction;
+import ru.spbau.des.roguelike.dom.environment.HitResult;
+import ru.spbau.des.roguelike.dom.environment.Position;
+import ru.spbau.des.roguelike.dom.environment.Unit;
+import ru.spbau.des.roguelike.dom.environment.DistanceNavigator;
+import ru.spbau.des.roguelike.dom.environment.Field;
 
 public class Monster implements Unit {
     private final static int MAX_CHASE_DIST = 8;
@@ -25,11 +25,11 @@ public class Monster implements Unit {
     }
 
     @Override
-    public HitReturn takeHit(int strength) {
+    public HitResult takeHit(int strength) {
         health -= strength;
         if (health <= 0) {
             dead = true;
-            return new ScoreUpdateReturn(this.power);
+            return new ScoreUpdateResult(this.power);
         }
         return null;
     }

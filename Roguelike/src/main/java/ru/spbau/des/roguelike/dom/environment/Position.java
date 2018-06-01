@@ -1,4 +1,4 @@
-package ru.spbau.des.roguelike.dom.base;
+package ru.spbau.des.roguelike.dom.environment;
 
 public class Position {
     private static final int MAX_COORDINATE = 1 << 16;

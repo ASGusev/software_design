@@ -1,11 +1,11 @@
 package ru.spbau.des.roguelike.dom.characters;
 
-import ru.spbau.des.roguelike.dom.base.HitReturn;
+import ru.spbau.des.roguelike.dom.environment.HitResult;
 
-public class ScoreUpdateReturn implements HitReturn {
+public class ScoreUpdateResult implements HitResult {
     private final int scoreDelta;
 
-    public ScoreUpdateReturn(int scoreDelta) {
+    public ScoreUpdateResult(int scoreDelta) {
         this.scoreDelta = scoreDelta;
     }
 

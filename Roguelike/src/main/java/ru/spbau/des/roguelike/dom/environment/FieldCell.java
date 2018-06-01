@@ -1,6 +1,4 @@
-package ru.spbau.des.roguelike.dom.field;
-
-import ru.spbau.des.roguelike.dom.base.Unit;
+package ru.spbau.des.roguelike.dom.environment;
 
 public class FieldCell {
     private Unit unit;

@@ -1,8 +1,4 @@
-package ru.spbau.des.roguelike.dom.field;
-
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.Position;
-import ru.spbau.des.roguelike.dom.base.Unit;
+package ru.spbau.des.roguelike.dom.environment;
 
 public class Field {
     private FieldCell[][] cells;

@@ -1,7 +1,4 @@
-package ru.spbau.des.roguelike.dom.field;
-
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.Position;
+package ru.spbau.des.roguelike.dom.environment;
 
 import java.util.Arrays;
 import java.util.LinkedList;

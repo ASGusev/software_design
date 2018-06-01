@@ -1,13 +1,13 @@
 package ru.spbau.des.roguelike.dom.characters;
 
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.HitReturn;
-import ru.spbau.des.roguelike.dom.base.Position;
+import ru.spbau.des.roguelike.dom.environment.Direction;
+import ru.spbau.des.roguelike.dom.environment.HitResult;
+import ru.spbau.des.roguelike.dom.environment.Position;
 import ru.spbau.des.roguelike.dom.equipment.Item;
-import ru.spbau.des.roguelike.dom.base.Unit;
+import ru.spbau.des.roguelike.dom.environment.Unit;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
-import ru.spbau.des.roguelike.dom.field.Field;
+import ru.spbau.des.roguelike.dom.environment.Field;
 
 public class Player implements Unit {
     private Armour armour;
@@ -63,21 +63,21 @@ public class Player implements Unit {
         this.field = field;
     }
 
-    public HitReturn step(Direction step) {
+    public HitResult step(Direction step) {
         Position nextPosition = position.resolve(step);
         if (field.freeAt(nextPosition)) {
             move(nextPosition);
             return null;
         } else {
             Unit target = field.get(nextPosition);
-            HitReturn hitReturn = target.takeHit(getPower());
+            HitResult hitResult = target.takeHit(getPower());
             if (target.isDead()) {
                 field.clear(nextPosition);
             }
-            if (hitReturn instanceof Item) {
+            if (hitResult instanceof Item) {
                 move(nextPosition);
             }
-            return hitReturn;
+            return hitResult;
         }
     }
 

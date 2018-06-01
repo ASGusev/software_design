@@ -1,9 +1,9 @@
 package ru.spbau.des.roguelike.operation;
 
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.Position;
-import ru.spbau.des.roguelike.dom.field.Field;
-import ru.spbau.des.roguelike.dom.field.FieldCell;
+import ru.spbau.des.roguelike.dom.environment.Direction;
+import ru.spbau.des.roguelike.dom.environment.Position;
+import ru.spbau.des.roguelike.dom.environment.Field;
+import ru.spbau.des.roguelike.dom.environment.FieldCell;
 
 import java.util.*;
 

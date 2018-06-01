@@ -3,11 +3,11 @@ package ru.spbau.des.roguelike.dom.characters;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.Position;
-import ru.spbau.des.roguelike.dom.base.Unit;
-import ru.spbau.des.roguelike.dom.field.DistanceNavigator;
-import ru.spbau.des.roguelike.dom.field.Field;
+import ru.spbau.des.roguelike.dom.environment.Direction;
+import ru.spbau.des.roguelike.dom.environment.Position;
+import ru.spbau.des.roguelike.dom.environment.Unit;
+import ru.spbau.des.roguelike.dom.environment.DistanceNavigator;
+import ru.spbau.des.roguelike.dom.environment.Field;
 
 public class TestMonster {
     @Test

@@ -1,4 +1,4 @@
-package ru.spbau.des.roguelike.dom.base;
+package ru.spbau.des.roguelike.dom.environment;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,14 +1,12 @@
 package ru.spbau.des.roguelike.operation;
 
-import ru.spbau.des.roguelike.dom.base.*;
 import ru.spbau.des.roguelike.dom.characters.Monster;
 import ru.spbau.des.roguelike.dom.characters.Player;
-import ru.spbau.des.roguelike.dom.characters.ScoreUpdateReturn;
+import ru.spbau.des.roguelike.dom.characters.ScoreUpdateResult;
+import ru.spbau.des.roguelike.dom.environment.*;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Item;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
-import ru.spbau.des.roguelike.dom.field.DistanceNavigator;
-import ru.spbau.des.roguelike.dom.field.Field;
 
 import java.util.List;
 
@@ -49,14 +47,14 @@ public class Game {
     }
 
     public Dialog runStep(Direction step) {
-        HitReturn playerReturn = player.step(step);
+        HitResult playerReturn = player.step(step);
         DistanceNavigator navigator = new DistanceNavigator(field, player.getPosition());
         monsters.removeIf(Monster::isDead);
         monsters.forEach(monster -> monster.step(field, navigator));
         if (player.isDead()) {
             status = GameStatus.LOST;
         }
-        if (playerReturn instanceof FinishReturn) {
+        if (playerReturn instanceof FinishResult) {
             updateLevel();
         }
         if (playerReturn instanceof Item) {
@@ -77,8 +75,8 @@ public class Game {
                 public void deny() {}
             };
         }
-        if (playerReturn instanceof ScoreUpdateReturn) {
-            score += ((ScoreUpdateReturn) playerReturn).getScoreDelta();
+        if (playerReturn instanceof ScoreUpdateResult) {
+            score += ((ScoreUpdateResult) playerReturn).getScoreDelta();
         }
         return null;
     }

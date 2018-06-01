@@ -3,13 +3,13 @@ package ru.spbau.des.roguelike.dom.characters;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import ru.spbau.des.roguelike.dom.base.Direction;
-import ru.spbau.des.roguelike.dom.base.HitReturn;
-import ru.spbau.des.roguelike.dom.base.Position;
-import ru.spbau.des.roguelike.dom.base.Unit;
+import ru.spbau.des.roguelike.dom.environment.Direction;
+import ru.spbau.des.roguelike.dom.environment.HitResult;
+import ru.spbau.des.roguelike.dom.environment.Position;
+import ru.spbau.des.roguelike.dom.environment.Unit;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
-import ru.spbau.des.roguelike.dom.field.Field;
+import ru.spbau.des.roguelike.dom.environment.Field;
 
 public class TestPlayer {
     @Test
@@ -57,7 +57,7 @@ public class TestPlayer {
         Position targetPosition = new Position(1, 0);
         Player player = new Player(null, new Weapon(power, ""), 100);
 
-        HitReturn returnMock = Mockito.mock(HitReturn.class);
+        HitResult returnMock = Mockito.mock(HitResult.class);
         Unit unitMock = Mockito.mock(Unit.class);
         Mockito.when(unitMock.takeHit(power)).thenReturn(returnMock);
 
@@ -68,7 +68,7 @@ public class TestPlayer {
         player.setField(fieldMock);
         player.setPosition(zeroPosition);
 
-        HitReturn stepReturn = player.step(Direction.RIGHT);
+        HitResult stepReturn = player.step(Direction.RIGHT);
 
         Assert.assertSame(returnMock, stepReturn);
         Mockito.verify(fieldMock).freeAt(targetPosition);

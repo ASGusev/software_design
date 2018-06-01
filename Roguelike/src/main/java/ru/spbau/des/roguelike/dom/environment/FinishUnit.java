@@ -1,9 +1,9 @@
-package ru.spbau.des.roguelike.dom.base;
+package ru.spbau.des.roguelike.dom.environment;
 
 public class FinishUnit implements Unit {
     @Override
-    public HitReturn takeHit(int strength) {
-        return new FinishReturn();
+    public HitResult takeHit(int strength) {
+        return new FinishResult();
     }
 
     @Override

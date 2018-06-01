@@ -29,7 +29,7 @@ public class Game {
     public Game() {
         player = new Player(new Armour(0),
                 new Weapon(INITIAL_WEAPON_POWER, INITIAL_WEAPON_NAME),
-                INITIAL_HEALTH, field);
+                INITIAL_HEALTH);
         curLevel = 0;
         status = GameStatus.RUNNING;
         updateLevel();

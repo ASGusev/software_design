@@ -39,6 +39,10 @@ public class Monster implements Unit {
         return dead;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
     public void step(Field field, DistanceNavigator navigator) {
         int distance = navigator.distanceAt(position);
         if (distance > MAX_CHASE_DIST) {

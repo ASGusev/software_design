@@ -17,11 +17,10 @@ public class Player implements Unit {
     private Position position;
     private Field field;
 
-    public Player(Armour armour, Weapon weapon, int health, Field field) {
+    public Player(Armour armour, Weapon weapon, int health) {
         this.armour = armour;
         this.weapon = weapon;
         this.health = health;
-        this.field = field;
         dead = false;
     }
 

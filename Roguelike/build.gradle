@@ -14,3 +14,16 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.mockito', name: 'mockito-core', version:'2.+'
 }
+
+jar {
+    manifest {
+        attributes (
+                'Main-class': 'ru.spbau.des.roguelike.ui.ASCIIInterface'
+        )
+    }
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

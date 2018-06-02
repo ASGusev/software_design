@@ -2,7 +2,7 @@ package ru.spbau.des.roguelike.operation;
 
 import ru.spbau.des.roguelike.dom.characters.Monster;
 import ru.spbau.des.roguelike.dom.characters.Player;
-import ru.spbau.des.roguelike.dom.characters.ScoreUpdateResult;
+import ru.spbau.des.roguelike.dom.characters.ScoreResult;
 import ru.spbau.des.roguelike.dom.environment.*;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Item;
@@ -75,8 +75,8 @@ public class Game {
                 public void deny() {}
             };
         }
-        if (playerReturn instanceof ScoreUpdateResult) {
-            score += ((ScoreUpdateResult) playerReturn).getScoreDelta();
+        if (playerReturn instanceof ScoreResult) {
+            score += ((ScoreResult) playerReturn).getScoreDelta();
         }
         return null;
     }

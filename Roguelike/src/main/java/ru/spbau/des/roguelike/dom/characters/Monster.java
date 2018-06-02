@@ -29,7 +29,7 @@ public class Monster implements Unit {
         health -= strength;
         if (health <= 0) {
             dead = true;
-            return new ScoreUpdateResult(this.power);
+            return new ScoreResult(this.power);
         }
         return null;
     }

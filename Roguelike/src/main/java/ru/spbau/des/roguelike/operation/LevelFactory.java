@@ -1,14 +1,11 @@
 package ru.spbau.des.roguelike.operation;
 
-import ru.spbau.des.roguelike.dom.environment.Position;
-import ru.spbau.des.roguelike.dom.environment.Unit;
+import ru.spbau.des.roguelike.dom.environment.*;
 import ru.spbau.des.roguelike.dom.characters.Monster;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.BoxUnit;
 import ru.spbau.des.roguelike.dom.equipment.Drug;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
-import ru.spbau.des.roguelike.dom.environment.DistanceNavigator;
-import ru.spbau.des.roguelike.dom.environment.Field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +61,8 @@ public class LevelFactory {
     }
 
     private Level makeLevel(LevelProperties properties) {
-        Field field = new MapCreator().createMap();
+        FieldPlan plan = new FieldPlanCreator().createMap();
+        Field field = Field.fromPlan(plan);
         MonsterFactory monsterFactory = new MonsterFactory(properties.getMonsterPower(),
                 properties.getMonsterHealth());
         splitUnits(field, properties.getMonsters(),

@@ -1,14 +1,14 @@
 package ru.spbau.des.roguelike.dom.environment;
 
 public class Field {
-    private FieldCell[][] cells;
-    private int h;
-    private int w;
+    private final Unit[][] units;
+    private final int h;
+    private final int w;
 
-    public Field(FieldCell[][] cells) {
-        this.cells = cells;
-        w = cells.length;
-        h = cells[0].length;
+    private Field(Unit[][] units, int w, int h) {
+        this.units = units;
+        this.w = w;
+        this.h = h;
     }
 
     public boolean valid(Position position) {
@@ -17,11 +17,11 @@ public class Field {
     }
 
     public boolean freeAt(Position position) {
-        return valid(position) && cells[position.getX()][position.getY()].isFree();
+        return valid(position) && units[position.getX()][position.getY()] == null;
     }
 
     public Unit get(int x, int y) {
-        return cells[x][y].getUnit();
+        return units[x][y];
     }
 
     public Unit get(Position position) {
@@ -47,10 +47,34 @@ public class Field {
     }
 
     public void put(Position position, Unit value) {
-        cells[position.getX()][position.getY()].setUnit(value);
+        units[position.getX()][position.getY()] = value;
     }
 
     public void clear(Position position) {
-        cells[position.getX()][position.getY()].clear();
+        put(position, null);
+    }
+
+    public static Field fromPlan(FieldPlan plan) {
+        int w = plan.getW();
+        int h = plan.getH();
+        Unit[][] units = new Unit[w][h];
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                switch (plan.get(i, j)) {
+                    case EMPTY: {
+                        units[i][j] = null;
+                        break;
+                    }
+                    case WALL: {
+                        units[i][j] = new WallUnit(true);
+                        break;
+                    }
+                    case INDESTRUCTIBLE_WALL: {
+                        units[i][j] = new WallUnit(false);
+                    }
+                }
+            }
+        }
+        return new Field(units, w, h);
     }
 }

@@ -1,13 +1,10 @@
 package ru.spbau.des.roguelike.operation;
 
-import ru.spbau.des.roguelike.dom.environment.Direction;
-import ru.spbau.des.roguelike.dom.environment.Position;
-import ru.spbau.des.roguelike.dom.environment.Field;
-import ru.spbau.des.roguelike.dom.environment.FieldCell;
+import ru.spbau.des.roguelike.dom.environment.*;
 
 import java.util.*;
 
-public class MapCreator {
+public class FieldPlanCreator {
     private static final int W = 50;
     private static final int H = 20;
     private static final int MAX_SIDE = 16;
@@ -16,20 +13,14 @@ public class MapCreator {
     private static final double MAX_SIDE_DIVISOR = 1.2;
     private static final Random RANDOM_GENERATOR = new Random();
 
-    public Field createMap() {
-        FieldCell[][] cells = new FieldCell[W][H];
-        for (int i = 0; i < W; i++) {
-            for (int j = 0; j < H; j++) {
-                boolean destructible = i > 0 && j > 0 && i < W - 1 && j < H - 1;
-                cells[i][j] = FieldCell.wall(destructible);
-            }
-        }
-        makeRooms(cells, 1, W - 1, 1, H - 1, false);
-        connectRooms(cells);
-        return new Field(cells);
+    public FieldPlan createMap() {
+        FieldPlan plan = new FieldPlan(W, H);
+        makeRooms(plan, 1, W - 1, 1, H - 1, false);
+        connectRooms(plan);
+        return plan;
     }
 
-    private void makeRooms(FieldCell[][] field, int x1, int x2, int y1, int y2, boolean splitX) {
+    private void makeRooms(FieldPlan plan, int x1, int x2, int y1, int y2, boolean splitX) {
         if (x2 - x1 < MIN_SIDE || y2 - y1 < MIN_SIDE){
             return;
         }
@@ -44,23 +35,23 @@ public class MapCreator {
             int sy = y1 + RANDOM_GENERATOR.nextInt(y2 - y1 - w);
             for (int i = sx; i <  sx + h; i++) {
                 for (int j = sy; j < sy + w; j++) {
-                    field[i][j].clear();
+                    plan.set(i, j, FieldPlan.Cell.EMPTY);
                 }
             }
         }
         else if (x2 - x1 >= MAX_SIDE && (y2 - y1 < MAX_SIDE || splitX)) {
             int xm = x1 + MIN_SIDE + RANDOM_GENERATOR.nextInt(x2 - x1 - 2 * MIN_SIDE);
-            makeRooms(field, x1, xm, y1, y2, !splitX);
-            makeRooms(field, xm, x2, y1, y2, !splitX);
+            makeRooms(plan, x1, xm, y1, y2, !splitX);
+            makeRooms(plan, xm, x2, y1, y2, !splitX);
         }
         else {
             int ym = y1 + MIN_SIDE + RANDOM_GENERATOR.nextInt(y2 - y1 - 2 * MIN_SIDE);
-            makeRooms(field, x1, x2, y1, ym, !splitX);
-            makeRooms(field, x1, x2, ym, y2, !splitX);
+            makeRooms(plan, x1, x2, y1, ym, !splitX);
+            makeRooms(plan, x1, x2, ym, y2, !splitX);
         }
     }
 
-    private void connectRooms(FieldCell[][] field) {
+    private void connectRooms(FieldPlan plan) {
         Set<Position> connected = new HashSet<>();
         List<Position> allCells = new ArrayList<>();
         for (int i = 0; i < W; i++) {
@@ -70,22 +61,22 @@ public class MapCreator {
         }
         Collections.shuffle(allCells);
         for (Position position: allCells) {
-            if (!field[position.getX()][position.getY()].isFree() ||
+            if (plan.get(position) != FieldPlan.Cell.EMPTY ||
                     connected.contains(position)) {
                 continue;
             }
             if (connected.isEmpty()) {
-                connected = getAccessible(field, position);
+                connected = getAccessible(plan, position);
             } else {
                 Position fromConnected = connected.iterator().next();
-                digTunnel(field, fromConnected.getX(), fromConnected.getY(),
+                digTunnel(plan, fromConnected.getX(), fromConnected.getY(),
                         position.getX(), position.getY());
-                connected = getAccessible(field, position);
+                connected = getAccessible(plan, position);
             }
         }
     }
 
-    private Set<Position> getAccessible(FieldCell[][] field, Position position) {
+    private Set<Position> getAccessible(FieldPlan plan, Position position) {
         Queue<Position> positions = new ArrayDeque<>();
         Set<Position> accessible = new HashSet<>();
         positions.offer(position);
@@ -94,7 +85,7 @@ public class MapCreator {
             Position curPosition = positions.poll();
             for (Direction direction: Direction.values()) {
                 Position nextPosition = curPosition.resolve(direction);
-                if (field[nextPosition.getX()][nextPosition.getY()].isFree() &&
+                if (plan.get(nextPosition) == FieldPlan.Cell.EMPTY &&
                         !accessible.contains(nextPosition)) {
                     positions.offer(nextPosition);
                     accessible.add(nextPosition);
@@ -104,18 +95,18 @@ public class MapCreator {
         return accessible;
     }
 
-    private void digTunnel(FieldCell[][] field, int sx, int sy, int tx, int ty) {
+    private void digTunnel(FieldPlan plan, int sx, int sy, int tx, int ty) {
         int cx = sx;
         int cy = sy;
         while (cx != tx) {
             int dx = (tx - cx) / Math.abs(tx - cx);
             cx += dx;
-            field[cx][cy].clear();
+            plan.set(cx, cy, FieldPlan.Cell.EMPTY);
         }
         while (cy != ty) {
             int dy = (ty - cy) / Math.abs(ty - cy);
             cy += dy;
-            field[cx][cy].clear();
+            plan.set(cx, cy, FieldPlan.Cell.EMPTY);
         }
     }
 }

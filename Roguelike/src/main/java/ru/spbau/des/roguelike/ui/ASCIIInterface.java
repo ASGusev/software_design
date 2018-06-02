@@ -4,6 +4,7 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import ru.spbau.des.roguelike.operation.DefaultFieldPlanCreator;
 import ru.spbau.des.roguelike.operation.Game;
 import ru.spbau.des.roguelike.operation.DefaultGameConfigurator;
 
@@ -39,7 +40,11 @@ public class ASCIIInterface {
 
     public static void main(String[] args) {
         try {
-            new ASCIIInterface(new Game(new DefaultGameConfigurator())).run();
+            DefaultFieldPlanCreator fieldPlanCreator = new DefaultFieldPlanCreator();
+            DefaultGameConfigurator gameConfigurator =
+                    new DefaultGameConfigurator(fieldPlanCreator);
+            Game game = new Game(gameConfigurator);
+            new ASCIIInterface(game).run();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

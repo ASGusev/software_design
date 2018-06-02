@@ -26,6 +26,11 @@ public class DefaultGameConfigurator implements GameConfigurator {
     private static final String HERB_ITEM_DESCRIPTION =
             "Affects health. Usually positively.";
     private final Random random = new Random();
+    private final FieldPlanCreator planCreator;
+
+    public DefaultGameConfigurator(FieldPlanCreator planCreator) {
+        this.planCreator = planCreator;
+    }
 
     private final static LevelProperties[] LEVEL_PROPERTIES = {
             new LevelProperties(7, 5, 2, 1,
@@ -79,7 +84,7 @@ public class DefaultGameConfigurator implements GameConfigurator {
     }
 
     private Level makeLevel(LevelProperties properties) {
-        FieldPlan plan = new FieldPlanCreator().createMap();
+        FieldPlan plan = planCreator.createMap();
         Field field = Field.fromPlan(plan);
         MonsterFactory monsterFactory = new MonsterFactory(properties.getMonsterPower(),
                 properties.getMonsterHealth());

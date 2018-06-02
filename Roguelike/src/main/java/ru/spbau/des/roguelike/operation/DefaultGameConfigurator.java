@@ -84,7 +84,7 @@ public class DefaultGameConfigurator implements GameConfigurator {
     }
 
     private Level makeLevel(LevelProperties properties) {
-        FieldPlan plan = planCreator.createMap();
+        FieldPlan plan = planCreator.createPlan();
         Field field = Field.fromPlan(plan);
         MonsterFactory monsterFactory = new MonsterFactory(properties.getMonsterPower(),
                 properties.getMonsterHealth());

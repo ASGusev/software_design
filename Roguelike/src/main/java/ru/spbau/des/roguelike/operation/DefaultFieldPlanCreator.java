@@ -17,7 +17,7 @@ public class DefaultFieldPlanCreator implements FieldPlanCreator {
     private static final double MAX_SIDE_DIVISOR = 1.2;
     private final Random randomGenerator = new Random();
 
-    public FieldPlan createMap() {
+    public FieldPlan createPlan() {
         FieldPlan plan = new FieldPlan(W, H);
         strengthenBorder(plan);
         makeRooms(plan, 1, W - 1, 1, H - 1, false);

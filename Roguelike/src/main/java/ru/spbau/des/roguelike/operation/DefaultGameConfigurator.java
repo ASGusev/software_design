@@ -1,5 +1,6 @@
 package ru.spbau.des.roguelike.operation;
 
+import ru.spbau.des.roguelike.dom.characters.Player;
 import ru.spbau.des.roguelike.dom.environment.*;
 import ru.spbau.des.roguelike.dom.characters.Monster;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
@@ -13,9 +14,13 @@ import java.util.Random;
 import java.util.function.Function;
 
 /**
- * Encapsulates logic of level creation an parameters of the levels to create
+ * Encapsulates logic of level creation, parameters of the levels to create and
+ * player initial properties
  */
-public class LevelFactory {
+public class DefaultGameConfigurator implements GameConfigurator {
+    private static final String INITIAL_WEAPON_NAME = "Fist";
+    private static final int INITIAL_WEAPON_POWER = 5;
+    private static final int INITIAL_HEALTH = 100;
     private final static int MIN_TO_GO = 20;
     private static final String HERB_ITEM_NAME = "Herb";
     private static final String HERB_ITEM_DESCRIPTION =
@@ -37,12 +42,21 @@ public class LevelFactory {
                     new Armour(30), new Weapon(40, "Sword"))
     };
 
-    public int levelsNumber() {
+    @Override
+    public int getLevelsNumber() {
         return LEVEL_PROPERTIES.length;
     }
 
+    @Override
     public Level getLevel(int number) {
         return makeLevel(LEVEL_PROPERTIES[number - 1]);
+    }
+
+    @Override
+    public Player getPlayer() {
+        return new Player(new Armour(0),
+                new Weapon(INITIAL_WEAPON_POWER, INITIAL_WEAPON_NAME),
+                INITIAL_HEALTH);
     }
 
     private Position randomPosition(Field field) {

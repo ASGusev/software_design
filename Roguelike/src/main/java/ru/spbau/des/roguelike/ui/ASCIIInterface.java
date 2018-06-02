@@ -5,6 +5,7 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import ru.spbau.des.roguelike.operation.Game;
+import ru.spbau.des.roguelike.operation.DefaultGameConfigurator;
 
 import java.io.IOException;
 
@@ -15,8 +16,8 @@ public class ASCIIInterface {
     private Game game;
     private Screen screen;
 
-    public ASCIIInterface() throws IOException {
-        game = new Game();
+    public ASCIIInterface(Game game) throws IOException {
+        this.game = game;
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
         screen = null;
         Terminal terminal = defaultTerminalFactory.createTerminal();
@@ -38,7 +39,7 @@ public class ASCIIInterface {
 
     public static void main(String[] args) {
         try {
-            new ASCIIInterface().run();
+            new ASCIIInterface(new Game(new DefaultGameConfigurator())).run();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

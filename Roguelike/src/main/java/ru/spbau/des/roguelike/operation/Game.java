@@ -4,9 +4,7 @@ import ru.spbau.des.roguelike.dom.characters.Monster;
 import ru.spbau.des.roguelike.dom.characters.Player;
 import ru.spbau.des.roguelike.dom.characters.ScoreResult;
 import ru.spbau.des.roguelike.dom.environment.*;
-import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Item;
-import ru.spbau.des.roguelike.dom.equipment.Weapon;
 
 import java.util.List;
 
@@ -14,12 +12,9 @@ import java.util.List;
  * Represents an episode of playing the game
  */
 public class Game {
-    private static final String INITIAL_WEAPON_NAME = "Fist";
     private static final String ITEM_APPLICATION_REQUEST_TEMPLATE = "Apply %s? %s";
-    private static final int INITIAL_WEAPON_POWER = 5;
-    private static final int INITIAL_HEALTH = 100;
 
-    private final LevelFactory levelFactory = new LevelFactory();
+    private final GameConfigurator configurator;
     private int curLevel;
     private Field field;
     private final Player player;
@@ -27,10 +22,9 @@ public class Game {
     private List<Monster> monsters;
     private int score;
 
-    public Game() {
-        player = new Player(new Armour(0),
-                new Weapon(INITIAL_WEAPON_POWER, INITIAL_WEAPON_NAME),
-                INITIAL_HEALTH);
+    public Game(GameConfigurator configurator) {
+        this.configurator = configurator;
+        player = configurator.getPlayer();
         curLevel = 0;
         status = GameStatus.RUNNING;
         updateLevel();
@@ -91,11 +85,11 @@ public class Game {
 
     public void updateLevel() {
         ++curLevel;
-        if (curLevel > levelFactory.levelsNumber()) {
+        if (curLevel > configurator.getLevelsNumber()) {
             status = GameStatus.WON;
             return;
         }
-        Level level = levelFactory.getLevel(curLevel);
+        Level level = configurator.getLevel(curLevel);
         field = level.getField();
         player.setPosition(level.getStart());
         player.setField(field);

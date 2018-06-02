@@ -3,6 +3,9 @@ package ru.spbau.des.roguelike.dom.equipment;
 import ru.spbau.des.roguelike.dom.environment.HitResult;
 import ru.spbau.des.roguelike.dom.environment.Unit;
 
+/**
+ * A box unit stores an Item. When hit, it returns the item and dies.
+ */
 public class BoxUnit implements Unit {
     private final Item item;
     private boolean dead;

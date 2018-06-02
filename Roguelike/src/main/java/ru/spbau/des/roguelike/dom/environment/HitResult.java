@@ -1,4 +1,7 @@
 package ru.spbau.des.roguelike.dom.environment;
 
-public interface HitResult {
-}
+/**
+ * Units can return HitReturn instances when they are hit
+ */
+public interface HitResult {}
+

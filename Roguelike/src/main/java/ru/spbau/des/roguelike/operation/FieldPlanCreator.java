@@ -4,19 +4,25 @@ import ru.spbau.des.roguelike.dom.environment.*;
 
 import java.util.*;
 
+/**
+ * This class contains logic of map creation
+ */
 public class FieldPlanCreator {
     private static final int W = 50;
     private static final int H = 20;
     private static final int MAX_SIDE = 16;
     private static final int MIN_SIDE = 4;
+    private static final int INDESTRUCTIBLE_WALLS = 15;
     private static final double MIN_SIDE_DIVISOR = 1.8;
     private static final double MAX_SIDE_DIVISOR = 1.2;
-    private static final Random RANDOM_GENERATOR = new Random();
+    private final Random randomGenerator = new Random();
 
     public FieldPlan createMap() {
         FieldPlan plan = new FieldPlan(W, H);
+        strengthenBorder(plan);
         makeRooms(plan, 1, W - 1, 1, H - 1, false);
         connectRooms(plan);
+        strengthenRandomWalls(plan);
         return plan;
     }
 
@@ -27,12 +33,12 @@ public class FieldPlanCreator {
         if (x2 - x1 < MAX_SIDE && y2 - y1 < MAX_SIDE) {
             int minH = (int)((x2 - x1) / MIN_SIDE_DIVISOR);
             int maxH = (int)((x2 - x1) / MAX_SIDE_DIVISOR);
-            int h = RANDOM_GENERATOR.nextInt(maxH - minH) + minH;
+            int h = randomGenerator.nextInt(maxH - minH) + minH;
             int minW = (int)((y2 - y1) / MIN_SIDE_DIVISOR);
             int maxW = (int)((y2 - y1) / MAX_SIDE_DIVISOR);
-            int w = RANDOM_GENERATOR.nextInt(maxW - minW) + minW;
-            int sx = x1 + RANDOM_GENERATOR.nextInt(x2 - x1 - h);
-            int sy = y1 + RANDOM_GENERATOR.nextInt(y2 - y1 - w);
+            int w = randomGenerator.nextInt(maxW - minW) + minW;
+            int sx = x1 + randomGenerator.nextInt(x2 - x1 - h);
+            int sy = y1 + randomGenerator.nextInt(y2 - y1 - w);
             for (int i = sx; i <  sx + h; i++) {
                 for (int j = sy; j < sy + w; j++) {
                     plan.set(i, j, FieldPlan.Cell.EMPTY);
@@ -40,12 +46,12 @@ public class FieldPlanCreator {
             }
         }
         else if (x2 - x1 >= MAX_SIDE && (y2 - y1 < MAX_SIDE || splitX)) {
-            int xm = x1 + MIN_SIDE + RANDOM_GENERATOR.nextInt(x2 - x1 - 2 * MIN_SIDE);
+            int xm = x1 + MIN_SIDE + randomGenerator.nextInt(x2 - x1 - 2 * MIN_SIDE);
             makeRooms(plan, x1, xm, y1, y2, !splitX);
             makeRooms(plan, xm, x2, y1, y2, !splitX);
         }
         else {
-            int ym = y1 + MIN_SIDE + RANDOM_GENERATOR.nextInt(y2 - y1 - 2 * MIN_SIDE);
+            int ym = y1 + MIN_SIDE + randomGenerator.nextInt(y2 - y1 - 2 * MIN_SIDE);
             makeRooms(plan, x1, x2, y1, ym, !splitX);
             makeRooms(plan, x1, x2, ym, y2, !splitX);
         }
@@ -107,6 +113,29 @@ public class FieldPlanCreator {
             int dy = (ty - cy) / Math.abs(ty - cy);
             cy += dy;
             plan.set(cx, cy, FieldPlan.Cell.EMPTY);
+        }
+    }
+
+    private void strengthenBorder(FieldPlan plan) {
+        for (int i = 0; i < W; i++) {
+            plan.set(i, 0, FieldPlan.Cell.INDESTRUCTIBLE_WALL);
+            plan.set(i, H - 1, FieldPlan.Cell.INDESTRUCTIBLE_WALL);
+        }
+        for (int j = 0; j < H; j++) {
+            plan.set(0, j, FieldPlan.Cell.INDESTRUCTIBLE_WALL);
+            plan.set(W - 1, j, FieldPlan.Cell.INDESTRUCTIBLE_WALL);
+        }
+    }
+
+    private void strengthenRandomWalls(FieldPlan plan) {
+        for (int i = 0; i < INDESTRUCTIBLE_WALLS; i++) {
+            int x = 0;
+            int y = 0;
+            while (plan.get(x, y) != FieldPlan.Cell.WALL) {
+                x = randomGenerator.nextInt(W);
+                y = randomGenerator.nextInt(H);
+            }
+            plan.set(x, y, FieldPlan.Cell.INDESTRUCTIBLE_WALL);
         }
     }
 }

@@ -33,8 +33,8 @@ public class TestMonster {
         Position targetPosition = new Position(1, 0);
         Monster monster = new Monster(0, 0, 100, zeroPosition);
         Field fieldMock = Mockito.mock(Field.class);
-        Mockito.when(fieldMock.freeAt(Mockito.any())).thenReturn(false);
-        Mockito.when(fieldMock.freeAt(targetPosition)).thenReturn(true);
+        Mockito.when(fieldMock.free(Mockito.any())).thenReturn(false);
+        Mockito.when(fieldMock.free(targetPosition)).thenReturn(true);
         DistanceNavigator navigatorMock = Mockito.mock(DistanceNavigator.class);
         Mockito.when(navigatorMock.distanceAt(Mockito.any())).thenReturn(-1);
         Mockito.when(navigatorMock.distanceAt(zeroPosition)).thenReturn(2);

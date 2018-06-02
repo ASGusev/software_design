@@ -51,7 +51,7 @@ public class Monster implements Unit {
         Direction chosenDirection = null;
         for (Direction direction: Direction.values()) {
             Position nextPosition = position.resolve(direction);
-            if (field.freeAt(nextPosition) &&
+            if (field.free(nextPosition) &&
                     navigator.distanceAt(nextPosition) == distance - 1 ||
                     navigator.distanceAt(nextPosition) == 0) {
                 chosenDirection = direction;

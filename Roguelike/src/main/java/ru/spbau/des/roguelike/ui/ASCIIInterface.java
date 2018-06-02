@@ -8,6 +8,9 @@ import ru.spbau.des.roguelike.operation.Game;
 
 import java.io.IOException;
 
+/**
+ * A text interface of the game.
+ */
 public class ASCIIInterface {
     private Game game;
     private Screen screen;
@@ -21,6 +24,10 @@ public class ASCIIInterface {
         screen.startScreen();
     }
 
+    /**
+     * Runs the game in a new screen
+     * @throws IOException
+     */
     public void run() throws IOException {
         GameScreen gameScreen = new GameScreen(game, screen);
         gameScreen.run();

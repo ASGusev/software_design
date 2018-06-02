@@ -8,6 +8,9 @@ import ru.spbau.des.roguelike.operation.GameStatus;
 
 import java.io.IOException;
 
+/**
+ * Shows a message with game result
+ */
 public class GameOverScreen {
     private final static String VICTORY_MSG = "You won!";
     private final static String LOSS_MSG = "You lost";

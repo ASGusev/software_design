@@ -10,6 +10,9 @@ import ru.spbau.des.roguelike.dom.equipment.Weapon;
 
 import java.util.List;
 
+/**
+ * Represents an episode of playing the game
+ */
 public class Game {
     private static final String INITIAL_WEAPON_NAME = "Fist";
     private static final String ITEM_APPLICATION_REQUEST_TEMPLATE = "Apply %s? %s";
@@ -46,6 +49,11 @@ public class Game {
         return field;
     }
 
+    /**
+     * Runs one step of the game
+     * @param step the direction of the player
+     * @return a Dialog if a question to the gamer emerges. null otherwise
+     */
     public Dialog runStep(Direction step) {
         HitResult playerReturn = player.step(step);
         DistanceNavigator navigator = new DistanceNavigator(field, player.getPosition());

@@ -65,12 +65,12 @@ public class Player implements Unit {
 
     public HitResult step(Direction step) {
         Position nextPosition = position.resolve(step);
-        if (field.freeAt(nextPosition)) {
+        if (field.free(nextPosition)) {
             move(nextPosition);
             return null;
         } else {
             Unit target = field.get(nextPosition);
-            HitResult hitResult = target.takeHit(getPower());
+            HitResult hitResult = weapon.hit(target);
             if (target.isDead()) {
                 field.clear(nextPosition);
             }

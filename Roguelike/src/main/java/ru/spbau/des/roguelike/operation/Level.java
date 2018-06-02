@@ -6,6 +6,9 @@ import ru.spbau.des.roguelike.dom.environment.Field;
 
 import java.util.List;
 
+/**
+ * A value class for a single level of the game
+ */
 public class Level {
     private final Field field;
     private final Position start;

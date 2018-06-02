@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Gets a field and a position.
+ * Calculates distances from that position to all non-wall units.
+ */
 public class DistanceNavigator {
     private Field field;
     private Position target;
@@ -27,6 +31,9 @@ public class DistanceNavigator {
             Position curPosition = positions.poll();
             for (Direction direction: Direction.values()) {
                 Position nextPosition = curPosition.resolve(direction);
+                if (!field.valid(nextPosition)) {
+                    continue;
+                }
                 if (!(field.get(nextPosition) instanceof WallUnit)
                         && distanceAt(nextPosition) == -1) {
                     distances[nextPosition.getX()][nextPosition.getY()] =

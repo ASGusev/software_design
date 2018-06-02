@@ -1,5 +1,9 @@
 package ru.spbau.des.roguelike.dom.environment;
 
+/**
+ * A representation of the battleground for creating maps which can be then turned
+ * into fields
+ */
 public class FieldPlan {
     private final Cell[][] cells;
     private final int w;

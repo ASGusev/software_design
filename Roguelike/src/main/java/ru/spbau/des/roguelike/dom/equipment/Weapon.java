@@ -1,7 +1,12 @@
 package ru.spbau.des.roguelike.dom.equipment;
 
 import ru.spbau.des.roguelike.dom.characters.Player;
+import ru.spbau.des.roguelike.dom.environment.HitResult;
+import ru.spbau.des.roguelike.dom.environment.Unit;
 
+/**
+ * Player uses a weapon to hit other units.
+ */
 public class Weapon implements Item {
     private final static String DESCRIPTION_TEMPLATE = "A weapon with damage %d.";
     private final int power;
@@ -29,5 +34,14 @@ public class Weapon implements Item {
     @Override
     public String getDescription() {
         return String.format(DESCRIPTION_TEMPLATE, power);
+    }
+
+    /**
+     * Hits a unit with the weapon's power
+     * @param unit the unit to hit
+     * @return value returned by the hit unit
+     */
+    public HitResult hit(Unit unit) {
+        return unit.takeHit(power);
     }
 }

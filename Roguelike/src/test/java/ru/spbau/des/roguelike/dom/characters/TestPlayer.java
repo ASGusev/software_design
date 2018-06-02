@@ -42,11 +42,11 @@ public class TestPlayer {
         Position targetPosition = new Position(1, 0);
         Player player = new Player(null, null, 100);
         Field fieldMock = Mockito.mock(Field.class);
-        Mockito.when(fieldMock.freeAt(targetPosition)).thenReturn(true);
+        Mockito.when(fieldMock.free(targetPosition)).thenReturn(true);
         player.setField(fieldMock);
         player.setPosition(zeroPosition);
         Assert.assertNull(player.step(Direction.RIGHT));
-        Mockito.verify(fieldMock).freeAt(targetPosition);
+        Mockito.verify(fieldMock).free(targetPosition);
         Mockito.verify(fieldMock).move(zeroPosition, targetPosition);
     }
 
@@ -62,7 +62,7 @@ public class TestPlayer {
         Mockito.when(unitMock.takeHit(power)).thenReturn(returnMock);
 
         Field fieldMock = Mockito.mock(Field.class);
-        Mockito.when(fieldMock.freeAt(targetPosition)).thenReturn(false);
+        Mockito.when(fieldMock.free(targetPosition)).thenReturn(false);
         Mockito.when(fieldMock.get(targetPosition)).thenReturn(unitMock);
 
         player.setField(fieldMock);
@@ -71,7 +71,7 @@ public class TestPlayer {
         HitResult stepReturn = player.step(Direction.RIGHT);
 
         Assert.assertSame(returnMock, stepReturn);
-        Mockito.verify(fieldMock).freeAt(targetPosition);
+        Mockito.verify(fieldMock).free(targetPosition);
         Mockito.verify(unitMock).takeHit(power);
     }
 }

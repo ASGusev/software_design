@@ -1,5 +1,8 @@
 package ru.spbau.des.roguelike.dom.environment;
 
+/**
+ * A convenient form to store a pair of coordinates.
+ */
 public class Position {
     private static final int MAX_COORDINATE = 1 << 16;
     private final int x;

@@ -20,6 +20,9 @@ import ru.spbau.des.roguelike.operation.GameStatus;
 
 import java.io.IOException;
 
+/**
+ * The screen that interacts with the player during the game
+ */
 public class GameScreen {
     private static final String HEALTH_TEMPLATE = "Health: %d.";
     private static final String POWER_TEMPLATE = "Power: %d";
@@ -123,7 +126,7 @@ public class GameScreen {
     }
 
     private static char cellView(Field field, Position position) {
-        if (field.freeAt(position)) {
+        if (field.free(position)) {
             return '.';
         }
         Unit unit = field.get(position);

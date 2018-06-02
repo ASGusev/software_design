@@ -12,23 +12,27 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * Encapsulates logic of level creation an parameters of the levels to create
+ */
 public class LevelFactory {
     private final static int MIN_TO_GO = 20;
     private static final String HERB_ITEM_NAME = "Herb";
-    private static final String HERB_ITEM_DESCRIPTION = "Affects health. Usually positively.";
+    private static final String HERB_ITEM_DESCRIPTION =
+            "Affects health. Usually positively.";
     private final Random random = new Random();
 
     private final static LevelProperties[] LEVEL_PROPERTIES = {
-            new LevelProperties(7, 5, 2, 2,
+            new LevelProperties(7, 5, 2, 1,
                     8, 10, 10,
                     new Armour(10), new Weapon(10, "Knife")),
-            new LevelProperties(7, 6, 3, 2,
+            new LevelProperties(7, 6, 2, 2,
                     16, 16, 10,
                     new Armour(20), new Weapon(15, "Machete")),
-            new LevelProperties(7, 6, 3, 2,
+            new LevelProperties(8, 6, 1, 2,
                     24, 30, 10,
                     new Armour(25), new Weapon(30, "Axe")),
-            new LevelProperties(7, 6, 2, 2,
+            new LevelProperties(9, 6, 1, 1,
                     40, 40, 10,
                     new Armour(30), new Weapon(40, "Sword"))
     };
@@ -44,7 +48,7 @@ public class LevelFactory {
     private Position randomPosition(Field field) {
         Position position = new Position(random.nextInt(field.getW()),
                 random.nextInt(field.getH()));
-        while (!field.freeAt(position)) {
+        while (!field.free(position)) {
             position = new Position(random.nextInt(field.getW()),
                     random.nextInt(field.getH()));
         }
@@ -54,7 +58,7 @@ public class LevelFactory {
     private void splitUnits(Field field, int repeats, Function<Position, Unit> unitFactory) {
         for (int i = 0; i < repeats; i++) {
             Position position = randomPosition(field);
-            if (field.freeAt(position)) {
+            if (field.free(position)) {
                 field.put(position, unitFactory.apply(position));
             }
         }

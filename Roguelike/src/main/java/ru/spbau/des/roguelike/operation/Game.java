@@ -46,9 +46,9 @@ public class Game {
     /**
      * Runs one step of the game
      * @param step the direction of the player
-     * @return a Dialog if a question to the gamer emerges. null otherwise
+     * @return a PickDecision if a question to the gamer emerges. null otherwise
      */
-    public Dialog runStep(Direction step) {
+    public PickDecision runStep(Direction step) {
         HitResult playerReturn = player.step(step);
         DistanceNavigator navigator = new DistanceNavigator(field, player.getPosition());
         monsters.removeIf(Monster::isDead);
@@ -61,21 +61,7 @@ public class Game {
         }
         if (playerReturn instanceof Item) {
             Item returnedItem = (Item) playerReturn;
-            return new Dialog() {
-                @Override
-                public String getMessage() {
-                    return String.format(ITEM_APPLICATION_REQUEST_TEMPLATE,
-                            returnedItem.getName(), returnedItem.getDescription());
-                }
-
-                @Override
-                public void accept() {
-                    returnedItem.apply(player);
-                }
-
-                @Override
-                public void deny() {}
-            };
+            return new PickDecision(player, returnedItem);
         }
         if (playerReturn instanceof ScoreResult) {
             score += ((ScoreResult) playerReturn).getScoreDelta();

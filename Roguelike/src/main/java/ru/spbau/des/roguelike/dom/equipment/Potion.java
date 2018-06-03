@@ -3,9 +3,9 @@ package ru.spbau.des.roguelike.dom.equipment;
 import ru.spbau.des.roguelike.dom.characters.Player;
 
 /**
- * When applied, Drug updates the player's heath.
+ * When applied, Potion updates the player's heath.
  */
-public class Drug implements Item {
+public class Potion implements Item {
     private final int value;
     private final String name;
     private final String description;
@@ -16,7 +16,7 @@ public class Drug implements Item {
      * @param name the name for the new drug
      * @param description the description for the drug
      */
-    public Drug(int value, String name, String description) {
+    public Potion(int value, String name, String description) {
         this.value = value;
         this.name = name;
         this.description = description;

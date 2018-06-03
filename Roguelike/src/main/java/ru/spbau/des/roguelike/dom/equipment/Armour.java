@@ -21,7 +21,7 @@ public class Armour implements Item {
 
     /**
      * Gets the percent of damage reduction
-     * @return
+     * @return number or percents damage is reduced
      */
     public int getProtection() {
         return protection;

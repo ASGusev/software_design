@@ -5,7 +5,7 @@ import ru.spbau.des.roguelike.dom.environment.*;
 import ru.spbau.des.roguelike.dom.characters.Monster;
 import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.BoxUnit;
-import ru.spbau.des.roguelike.dom.equipment.Drug;
+import ru.spbau.des.roguelike.dom.equipment.Potion;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class DefaultGameConfigurator implements GameConfigurator {
         splitUnits(field, properties.getMonsters(),
                 monsterFactory);
         splitUnits(field, properties.getDrugs(),
-                new DrugFactory(properties.getAvgDrug(), HERB_ITEM_NAME,
+                new PotionFactory(properties.getAvgDrug(), HERB_ITEM_NAME,
                         HERB_ITEM_DESCRIPTION));
         splitUnits(field, properties.getArmours(),
                 p -> new BoxUnit(properties.getArmour()));
@@ -130,12 +130,12 @@ public class DefaultGameConfigurator implements GameConfigurator {
         }
     }
 
-    private class DrugFactory implements Function<Position, Unit> {
+    private class PotionFactory implements Function<Position, Unit> {
         private final double expectation;
         private final String name;
         private final String description;
 
-        public DrugFactory(double expectation, String name, String description) {
+        public PotionFactory(double expectation, String name, String description) {
             this.expectation = expectation;
             this.name = name;
             this.description = description;
@@ -143,7 +143,7 @@ public class DefaultGameConfigurator implements GameConfigurator {
 
         @Override
         public Unit apply(Position position) {
-            return new BoxUnit(new Drug((int)(expectation * (random.nextGaussian() + 1)),
+            return new BoxUnit(new Potion((int)(expectation * (random.nextGaussian() + 1)),
                     name, description));
         }
     }

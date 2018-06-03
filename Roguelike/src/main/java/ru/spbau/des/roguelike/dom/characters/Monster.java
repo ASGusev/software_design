@@ -7,6 +7,10 @@ import ru.spbau.des.roguelike.dom.environment.Unit;
 import ru.spbau.des.roguelike.dom.environment.DistanceNavigator;
 import ru.spbau.des.roguelike.dom.environment.Field;
 
+/**
+ * Monster is an enemy unit. It chases the player unless the distance is too big. If
+ * the monster meets the player, it attacks with its power.
+ */
 public class Monster implements Unit {
     private final static int MAX_CHASE_DIST = 8;
 

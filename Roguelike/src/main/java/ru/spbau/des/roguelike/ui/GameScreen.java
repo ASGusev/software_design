@@ -14,7 +14,8 @@ import ru.spbau.des.roguelike.dom.characters.Player;
 import ru.spbau.des.roguelike.dom.equipment.BoxUnit;
 import ru.spbau.des.roguelike.dom.environment.Field;
 import ru.spbau.des.roguelike.dom.environment.WallUnit;
-import ru.spbau.des.roguelike.operation.Dialog;
+import ru.spbau.des.roguelike.dom.equipment.Item;
+import ru.spbau.des.roguelike.operation.PickDecision;
 import ru.spbau.des.roguelike.operation.Game;
 import ru.spbau.des.roguelike.operation.GameStatus;
 
@@ -34,17 +35,22 @@ public class GameScreen {
     private static final int ARMOUR_OFFSET = 2;
     private static final int SCORE_OFFSET = 3;
     private static final int LEVEL_OFFSET = 4;
+    private static final char PICK_KEY = 'p';
+    private static final String PICK_MESSAGE_TEMPLATE = "Press p to pick %s. %s";
     private final Game game;
     private final Screen screen;
+    private final TextGraphics textGraphics;
     private final int w;
     private final int h;
     private final int stateX;
     private final int stateY;
     private final Player player;
+    private TextViewer pickMessage = null;
 
     public GameScreen(Game game, Screen screen) throws IOException {
         this.game = game;
         this.screen = screen;
+        this.textGraphics = screen.newTextGraphics();
         player = game.getPlayer();
         w = game.getField().getW();
         h = game.getField().getH();
@@ -56,49 +62,63 @@ public class GameScreen {
 
     public void run() throws IOException {
         boolean changesHappened = true;
+        PickDecision pickDecision = null;
         while (game.getStatus() == GameStatus.RUNNING) {
             if (changesHappened) {
-                screen.clear();
-                renderField();
-                renderState();
-                screen.refresh();
+                updateScreen();
                 changesHappened = false;
             }
-            Direction direction = getDirection();
-            if (direction != null) {
-                Dialog stepReturn = game.runStep(direction);
-                if (stepReturn != null) {
-                    YNDialog applyDialog = new YNDialog(screen,
-                            stepReturn.getMessage(), 0, h);
-                    if (applyDialog.ask()) {
-                        stepReturn.accept();
-                    } else {
-                        stepReturn.deny();
+            Direction direction = null;
+            KeyStroke keyStroke = screen.pollInput();
+            if (keyStroke == null) {
+                continue;
+            } else {
+                KeyType keyType = keyStroke.getKeyType();
+                if (keyType == KeyType.ArrowDown) {
+                    direction = Direction.DOWN;
+                } else if (keyType == KeyType.ArrowUp) {
+                    direction = Direction.UP;
+                } else if (keyType == KeyType.ArrowRight) {
+                    direction = Direction.RIGHT;
+                } else if (keyType == KeyType.ArrowLeft) {
+                    direction = Direction.LEFT;
+                } else if (keyType == KeyType.Character) {
+                    Character keyCharacter = keyStroke.getCharacter();
+                    if (keyCharacter == PICK_KEY) {
+                        if (pickDecision != null) {
+                            pickDecision.pick();
+                            pickMessage = null;
+                            updateScreen();
+                        }
                     }
+                }
+            }
+            if (direction != null) {
+                pickDecision = game.runStep(direction);
+                pickMessage = null;
+                if (pickDecision != null) {
+                    pickMessage = new TextViewer(textGraphics, 0, h + 1,
+                            makePickMessage(pickDecision.getItem()));
+                    screen.refresh();
                 }
                 changesHappened = true;
             }
         }
     }
 
-    private Direction getDirection() throws IOException {
-        KeyStroke keyStroke = screen.pollInput();
-        if (keyStroke == null) {
-            return null;
+    private String makePickMessage(Item item) {
+        return String.format(PICK_MESSAGE_TEMPLATE,
+                item.getName(), item.getDescription());
+    }
+
+    private void updateScreen() throws IOException {
+        screen.clear();
+        if (pickMessage != null) {
+            pickMessage.draw();
         }
-        if (keyStroke.getKeyType() == KeyType.ArrowDown) {
-            return Direction.DOWN;
-        }
-        if (keyStroke.getKeyType() == KeyType.ArrowUp) {
-            return Direction.UP;
-        }
-        if (keyStroke.getKeyType() == KeyType.ArrowRight) {
-            return Direction.RIGHT;
-        }
-        if (keyStroke.getKeyType() == KeyType.ArrowLeft) {
-            return Direction.LEFT;
-        }
-        return null;
+        renderField();
+        renderState();
+        screen.refresh();
     }
 
     private void renderField() {
@@ -112,7 +132,6 @@ public class GameScreen {
     }
 
     private void renderState() {
-        TextGraphics textGraphics = screen.newTextGraphics();
         textGraphics.putString(stateX, stateY + HEALTH_OFFSET,
                 String.format(HEALTH_TEMPLATE, player.getHealth()));
         textGraphics.putString(stateX, stateY + POWER_OFFSET,

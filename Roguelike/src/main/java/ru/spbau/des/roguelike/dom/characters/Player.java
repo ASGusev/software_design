@@ -9,13 +9,25 @@ import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
 import ru.spbau.des.roguelike.dom.environment.Field;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * The player's game character. Carries a weapon, a piece armour. Has a position on
+ * a field, health.
+ */
 public class Player implements Unit {
+    private final static int MAX_BAG_SIZE = 10;
+
     private Armour armour;
     private Weapon weapon;
     private int health;
     private boolean dead;
     private Position position;
     private Field field;
+    private final LinkedList<Item> bag = new LinkedList<>();
 
     public Player(Armour armour, Weapon weapon, int health) {
         this.armour = armour;
@@ -36,6 +48,10 @@ public class Player implements Unit {
         return armour.getProtection();
     }
 
+    /**
+     * Adds delta to health
+     * @param delta value to add to health
+     */
     public void updateHealth(int delta) {
         health += delta;
         if (health <= 0) {
@@ -63,6 +79,13 @@ public class Player implements Unit {
         this.field = field;
     }
 
+    /**
+     * Runs a game step with provided direction. If the pointed field is empty, the
+     * character enters it, otherwise it attacks the unit in that field.
+     * @param step the direction chosen for the step
+     * @return null if the field was empty, otherwise the value returned by the
+     * attacked unit
+     */
     public HitResult step(Direction step) {
         Position nextPosition = position.resolve(step);
         if (field.free(nextPosition)) {
@@ -84,6 +107,17 @@ public class Player implements Unit {
     private void move(Position nextPosition) {
         field.move(position, nextPosition);
         position = nextPosition;
+    }
+
+    public List<Item> getBag() {
+        return bag;
+    }
+
+    public void addItem(Item item){
+        if (bag.size() == MAX_BAG_SIZE) {
+            bag.pollLast();
+        }
+        bag.addFirst(item);
     }
 
     public Position getPosition() {

@@ -9,14 +9,19 @@ import ru.spbau.des.roguelike.dom.equipment.Item;
 public class PickDecision {
     private final Player player;
     private final Item item;
+    private boolean used;
 
     public PickDecision(Player player, Item item) {
         this.player = player;
         this.item = item;
+        used = false;
     }
 
     public void pick() {
-        item.apply(player);
+        if (!used) {
+            player.addItem(item);
+            used = true;
+        }
     }
 
     public Item getItem() {

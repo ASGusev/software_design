@@ -9,6 +9,7 @@ import ru.spbau.des.roguelike.dom.environment.Unit;
  */
 public class Weapon implements Item {
     private final static String DESCRIPTION_TEMPLATE = "A weapon with damage %d.";
+    private final static String SHORT_DESCRIPTION_PREF = "Weapon ";
     private final int power;
     private final String name;
 
@@ -34,6 +35,11 @@ public class Weapon implements Item {
     @Override
     public String getDescription() {
         return String.format(DESCRIPTION_TEMPLATE, power);
+    }
+
+    @Override
+    public String getShortDescription() {
+        return SHORT_DESCRIPTION_PREF + power;
     }
 
     /**

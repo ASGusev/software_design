@@ -13,4 +13,6 @@ public interface Item extends HitResult {
     String getName();
 
     String getDescription();
+
+    String getShortDescription();
 }

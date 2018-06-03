@@ -35,8 +35,13 @@ public class GameScreen {
     private static final int ARMOUR_OFFSET = 2;
     private static final int SCORE_OFFSET = 3;
     private static final int LEVEL_OFFSET = 4;
-    private static final char PICK_KEY = 'p';
+    private static final int EQUIPMENT_OFFSET = 6;
+    private static final Character PICK_KEY = 'p';
+    private static final Character DROP_KEY = 'd';
     private static final String PICK_MESSAGE_TEMPLATE = "Press p to pick %s. %s";
+    private static final String EQUIPMENT_HEADER = "Equipment:";
+    private static final String DROP_MESSAGE = "Press item number to drop";
+
     private final Game game;
     private final Screen screen;
     private final TextGraphics textGraphics;
@@ -45,7 +50,7 @@ public class GameScreen {
     private final int stateX;
     private final int stateY;
     private final Player player;
-    private TextViewer pickMessage = null;
+    private String bottomMessage;
 
     public GameScreen(Game game, Screen screen) throws IOException {
         this.game = game;
@@ -62,6 +67,7 @@ public class GameScreen {
 
     public void run() throws IOException {
         boolean changesHappened = true;
+        boolean dropItem = false;
         PickDecision pickDecision = null;
         while (game.getStatus() == GameStatus.RUNNING) {
             if (changesHappened) {
@@ -84,21 +90,42 @@ public class GameScreen {
                     direction = Direction.LEFT;
                 } else if (keyType == KeyType.Character) {
                     Character keyCharacter = keyStroke.getCharacter();
-                    if (keyCharacter == PICK_KEY) {
+                    if (keyCharacter.equals(PICK_KEY)) {
                         if (pickDecision != null) {
                             pickDecision.pick();
-                            pickMessage = null;
+                            pickDecision = null;
+                            bottomMessage = null;
+                            updateScreen();
+                        }
+                    } else if (keyCharacter.equals(DROP_KEY)) {
+                        if (dropItem) {
+                            dropItem = false;
+                            bottomMessage = null;
+                            updateScreen();
+                        } else {
+                            dropItem = true;
+                            bottomMessage = DROP_MESSAGE;
+                            updateScreen();
+                        }
+                    } else if (Character.isDigit(keyCharacter)) {
+                        int itemIndex = keyCharacter - '1';
+                        if (dropItem) {
+                            player.dropItem(itemIndex);
+                            bottomMessage = null;
+                            dropItem = false;
+                            updateScreen();
+                        } else {
+                            game.runItemStep(itemIndex);
                             updateScreen();
                         }
                     }
                 }
             }
             if (direction != null) {
-                pickDecision = game.runStep(direction);
-                pickMessage = null;
+                pickDecision = game.runMovementStep(direction);
+                bottomMessage = null;
                 if (pickDecision != null) {
-                    pickMessage = new TextViewer(textGraphics, 0, h + 1,
-                            makePickMessage(pickDecision.getItem()));
+                    bottomMessage = makePickMessage(pickDecision.getItem());
                     screen.refresh();
                 }
                 changesHappened = true;
@@ -113,8 +140,8 @@ public class GameScreen {
 
     private void updateScreen() throws IOException {
         screen.clear();
-        if (pickMessage != null) {
-            pickMessage.draw();
+        if (bottomMessage != null) {
+            textGraphics.putString(0, h +  1, bottomMessage);
         }
         renderField();
         renderState();
@@ -142,6 +169,20 @@ public class GameScreen {
                 String.format(SCORE_TEMPLATE, game.getScore()));
         textGraphics.putString(stateX, stateY + LEVEL_OFFSET,
                 String.format(LEVEL_TEMPLATE, game.getLevel()));
+
+        textGraphics.putString(stateX, stateY + EQUIPMENT_OFFSET,
+                EQUIPMENT_HEADER);
+        int itemNumber = 1;
+        for (Item item: player.getBag()) {
+            textGraphics.putString(stateX,
+                    stateY + EQUIPMENT_OFFSET + itemNumber,
+                    makeItemListEntry(item, itemNumber));
+            itemNumber++;
+        }
+    }
+
+    private String makeItemListEntry(Item item, int number) {
+        return number + " " + item.getName() + " " + item.getShortDescription();
     }
 
     private static char cellView(Field field, Position position) {

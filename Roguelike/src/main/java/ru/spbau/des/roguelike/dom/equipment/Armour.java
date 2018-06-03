@@ -9,6 +9,7 @@ import ru.spbau.des.roguelike.dom.characters.Player;
 public class Armour implements Item {
     private final static String NAME = "Armour";
     private final static String DESCRIPTION_TEMPLATE = "%d%% damage reduction.";
+    private static final String SHORT_DESCRIPTION_PREF = "Armour ";
     private final int protection;
 
     /**
@@ -40,5 +41,10 @@ public class Armour implements Item {
     @Override
     public String getDescription() {
         return String.format(DESCRIPTION_TEMPLATE, protection);
+    }
+
+    @Override
+    public String getShortDescription() {
+        return SHORT_DESCRIPTION_PREF + protection;
     }
 }

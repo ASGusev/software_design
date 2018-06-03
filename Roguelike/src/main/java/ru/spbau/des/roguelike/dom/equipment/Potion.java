@@ -6,6 +6,7 @@ import ru.spbau.des.roguelike.dom.characters.Player;
  * When applied, Potion updates the player's heath.
  */
 public class Potion implements Item {
+    private static final String SHORT_DESCRIPTION = "Potion";
     private final int value;
     private final String name;
     private final String description;
@@ -35,5 +36,10 @@ public class Potion implements Item {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String getShortDescription() {
+        return SHORT_DESCRIPTION;
     }
 }

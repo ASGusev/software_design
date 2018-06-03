@@ -19,7 +19,7 @@ import java.util.List;
  * a field, health.
  */
 public class Player implements Unit {
-    private final static int MAX_BAG_SIZE = 10;
+    private final static int MAX_BAG_SIZE = 9;
 
     private Armour armour;
     private Weapon weapon;
@@ -118,6 +118,18 @@ public class Player implements Unit {
             bag.pollLast();
         }
         bag.addFirst(item);
+    }
+
+    public void applyItem(int index) {
+        if (index < bag.size()) {
+            Item activeItem = bag.get(index);
+            bag.remove(index);
+            activeItem.apply(this);
+        }
+    }
+
+    public void dropItem(int index) {
+        bag.remove(index);
     }
 
     public Position getPosition() {

@@ -48,17 +48,14 @@ public class Game {
      * @param step the direction of the player
      * @return a PickDecision if a question to the gamer emerges. null otherwise
      */
-    public PickDecision runStep(Direction step) {
+    public PickDecision runMovementStep(Direction step) {
         HitResult playerReturn = player.step(step);
-        DistanceNavigator navigator = new DistanceNavigator(field, player.getPosition());
         monsters.removeIf(Monster::isDead);
-        monsters.forEach(monster -> monster.step(field, navigator));
-        if (player.isDead()) {
-            status = GameStatus.LOST;
-        }
         if (playerReturn instanceof FinishResult) {
             updateLevel();
+            return null;
         }
+        runMonsters();
         if (playerReturn instanceof Item) {
             Item returnedItem = (Item) playerReturn;
             return new PickDecision(player, returnedItem);
@@ -66,7 +63,20 @@ public class Game {
         if (playerReturn instanceof ScoreResult) {
             score += ((ScoreResult) playerReturn).getScoreDelta();
         }
+        if (player.isDead()) {
+            status = GameStatus.LOST;
+        }
         return null;
+    }
+
+    public void runItemStep(int itemIndex) {
+        player.applyItem(itemIndex);
+        runMonsters();
+    }
+
+    private void runMonsters() {
+        DistanceNavigator navigator = new DistanceNavigator(field, player.getPosition());
+        monsters.forEach(monster -> monster.step(field, navigator));
     }
 
     public void updateLevel() {

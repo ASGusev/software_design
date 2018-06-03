@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Messenger is a chat that exchanges messages through provided Transport
+ */
 public class Messenger implements Chat, TransportListener {
     private final static String CONNECTION_MSG = "Connected";
 

@@ -5,6 +5,9 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 
+/**
+ * Transport for chat server. Maintains its own GRPC service
+ */
 public class ServerTransport extends BaseTransport {
     private StreamObserver<Protocol.Message> outputObserver;
 

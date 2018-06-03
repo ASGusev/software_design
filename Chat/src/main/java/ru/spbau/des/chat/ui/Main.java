@@ -8,6 +8,10 @@ import ru.spbau.des.chat.transport.Transport;
 
 import java.io.IOException;
 
+/**
+ * Creates a Messenger with server or client transport and launches command line
+ * interface with it
+ */
 public class Main {
     private static final String BAD_INPUT_MESSAGE = "Usage: \n" +
             "<username> server <port> or \n" +

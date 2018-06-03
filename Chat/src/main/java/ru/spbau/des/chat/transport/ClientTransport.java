@@ -6,6 +6,9 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 
+/**
+ * Transport for chat clients. Relies on a GRPC service working on a server.
+ */
 public class ClientTransport extends BaseTransport {
 
     public static final String MSG_NO_CONNECTION = "Client: no connection";

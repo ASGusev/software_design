@@ -5,6 +5,9 @@ import ru.spbau.des.chat.transport.TransportMessage;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * ChatMessage can be sent through a Chat
+ */
 public class ChatMessage {
     private final String text;
     private final String author;

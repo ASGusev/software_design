@@ -1,5 +1,8 @@
 package ru.spbau.des.chat.transport;
 
+/**
+ * BaseTransport provides its subclasses with callback registration functionality.
+ */
 public abstract class BaseTransport implements Transport {
     private TransportListener listener;
 

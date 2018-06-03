@@ -5,6 +5,9 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 
+/**
+ * Represents a message which can be sent through a transport
+ */
 public class TransportMessage {
     private final String text;
     private final String author;

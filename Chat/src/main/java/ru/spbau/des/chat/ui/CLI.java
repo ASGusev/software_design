@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+/**
+ * Provides a command line interface for a Chat
+ */
 public class CLI implements ChatListener {
     private final static String DISCONNECTION_MSG = "Disconnected";
 

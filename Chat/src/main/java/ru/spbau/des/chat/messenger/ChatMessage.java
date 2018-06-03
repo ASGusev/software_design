@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class ChatMessage {
-private final String text;
+    private final String text;
     private final String author;
     private final LocalDateTime time;
 

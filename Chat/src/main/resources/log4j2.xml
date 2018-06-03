@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+    <Appenders>
+        <File name="serverAppender" filename="server.log">
+            <PatternLayout pattern="%date{DEFAULT} %-5level %message\n"/>
+        </File>
+        <File name="clientAppender" filename="client.log">
+            <PatternLayout pattern="%date{DEFAULT} %-5level %message\n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger level="INFO" name="serverLogger" additivity="false">
+            <AppenderRef ref="serverAppender"/>
+        </Logger>
+        <Logger level="INFO" name="clientLogger" additivity="false">
+            <AppenderRef ref="clientAppender"/>
+        </Logger>
+    </Loggers>
+</Configuration>

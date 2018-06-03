@@ -12,14 +12,14 @@ import ru.spbau.des.roguelike.dom.environment.Field;
 public class TestMonster {
     @Test
     public void testTakeHit() {
-        Monster monster = new Monster(0, 0, 100, null);
+        Monster monster = new Monster(0, 0, 100, new Position(0, 0));
         monster.takeHit(50);
         Assert.assertEquals(50, monster.getHealth());
     }
 
     @Test
     public void testDeath() {
-        Monster monster = new Monster(0, 0, 100, null);
+        Monster monster = new Monster(0, 0, 100, new Position(0, 0));
         Assert.assertFalse(monster.isDead());
         monster.takeHit(50);
         Assert.assertFalse(monster.isDead());

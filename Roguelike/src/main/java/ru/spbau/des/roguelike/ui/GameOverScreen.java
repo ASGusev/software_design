@@ -3,6 +3,7 @@ package ru.spbau.des.roguelike.ui;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
+import org.apache.logging.log4j.LogManager;
 import ru.spbau.des.roguelike.operation.Game;
 import ru.spbau.des.roguelike.operation.GameStatus;
 
@@ -14,8 +15,9 @@ import java.io.IOException;
 public class GameOverScreen {
     private final static String VICTORY_MSG = "You won!";
     private final static String LOSS_MSG = "You lost";
-    private final static String SCORE_TEMPLATE = "Score: %d";
+    private final static String SCORE_TEMPLATE = "Score: {}";
     private final static String PRESS_ANY_KEY = "Press any key to quit";
+    private static final String LOG_SHOWING = "Showing game over screen";
 
     private Game game;
     private Screen screen;
@@ -26,6 +28,7 @@ public class GameOverScreen {
     }
 
     public void show() throws IOException {
+        LogManager.getLogger().info(LOG_SHOWING);
         screen.clear();
         TextGraphics textGraphics = screen.newTextGraphics();
         int midRow = game.getField().getH() / 2;

@@ -1,5 +1,7 @@
 package ru.spbau.des.roguelike.dom.equipment;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.spbau.des.roguelike.dom.characters.Player;
 import ru.spbau.des.roguelike.dom.environment.HitResult;
 import ru.spbau.des.roguelike.dom.environment.Unit;
@@ -10,8 +12,11 @@ import ru.spbau.des.roguelike.dom.environment.Unit;
 public class Weapon implements Item {
     private final static String DESCRIPTION_TEMPLATE = "A weapon with damage %d.";
     private final static String SHORT_DESCRIPTION_PREF = "Weapon ";
+    private static final String LOG_HITTING = "Hitting with {}";
+
     private final int power;
     private final String name;
+    private final Logger logger = LogManager.getLogger();
 
     public Weapon(int power, String name) {
         this.power = power;
@@ -48,6 +53,7 @@ public class Weapon implements Item {
      * @return value returned by the hit unit
      */
     public HitResult hit(Unit unit) {
+        logger.debug(LOG_HITTING, name);
         return unit.takeHit(power);
     }
 }

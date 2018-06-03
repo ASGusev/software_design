@@ -5,6 +5,8 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.spbau.des.roguelike.dom.environment.Direction;
 import ru.spbau.des.roguelike.dom.environment.FinishUnit;
 import ru.spbau.des.roguelike.dom.environment.Position;
@@ -41,6 +43,15 @@ public class GameScreen {
     private static final String PICK_MESSAGE_TEMPLATE = "Press p to pick %s. %s";
     private static final String EQUIPMENT_HEADER = "Equipment:";
     private static final String DROP_MESSAGE = "Press item number to drop";
+    private static final char CELL_EMPTY = '.';
+    private static final char CELL_WALL = '#';
+    private static final char CELL_MONSTER = 'm';
+    private static final char CELL_BOX = 'o';
+    private static final char CELL_FINISH = 'F';
+    private static final char CELL_PLAYER = '@';
+    private static final String LOG_GAME_FINISHED = "Game finished";
+    private static final String LOG_GAME_STARTED = "Game started";
+    private static final String LOG_GAME_SCREEN_CREATED = "GameScreen created";
 
     private final Game game;
     private final Screen screen;
@@ -51,6 +62,9 @@ public class GameScreen {
     private final int stateY;
     private final Player player;
     private String bottomMessage;
+    private final Logger logger = LogManager.getLogger();
+    private final int bottomMessageRow;
+    private final int bottomMessageColumn;
 
     public GameScreen(Game game, Screen screen) throws IOException {
         this.game = game;
@@ -59,13 +73,17 @@ public class GameScreen {
         player = game.getPlayer();
         w = game.getField().getW();
         h = game.getField().getH();
+        bottomMessageRow = h + 1;
+        bottomMessageColumn = 0;
         stateX = w + 1;
         stateY = 1;
         renderField();
         screen.refresh();
+        logger.info(LOG_GAME_SCREEN_CREATED);
     }
 
     public void run() throws IOException {
+        logger.info(LOG_GAME_STARTED);
         boolean changesHappened = true;
         boolean dropItem = false;
         PickDecision pickDecision = null;
@@ -131,6 +149,7 @@ public class GameScreen {
                 changesHappened = true;
             }
         }
+        logger.info(LOG_GAME_FINISHED);
     }
 
     private String makePickMessage(Item item) {
@@ -141,7 +160,8 @@ public class GameScreen {
     private void updateScreen() throws IOException {
         screen.clear();
         if (bottomMessage != null) {
-            textGraphics.putString(0, h +  1, bottomMessage);
+            textGraphics.putString(bottomMessageColumn, bottomMessageRow,
+                    bottomMessage);
         }
         renderField();
         renderState();
@@ -187,21 +207,21 @@ public class GameScreen {
 
     private static char cellView(Field field, Position position) {
         if (field.free(position)) {
-            return '.';
+            return CELL_EMPTY;
         }
         Unit unit = field.get(position);
         if (unit instanceof WallUnit) {
-            return '#';
+            return CELL_WALL;
         }
         if (unit instanceof Monster) {
-            return 'm';
+            return CELL_MONSTER;
         }
         if (unit instanceof BoxUnit) {
-            return 'o';
+            return CELL_BOX;
         }
         if (unit instanceof FinishUnit) {
-            return 'F';
+            return CELL_FINISH;
         }
-        return '@';
+        return CELL_PLAYER;
     }
 }

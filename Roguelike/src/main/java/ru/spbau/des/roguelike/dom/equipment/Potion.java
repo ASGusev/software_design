@@ -1,5 +1,7 @@
 package ru.spbau.des.roguelike.dom.equipment;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.spbau.des.roguelike.dom.characters.Player;
 
 /**
@@ -7,9 +9,11 @@ import ru.spbau.des.roguelike.dom.characters.Player;
  */
 public class Potion implements Item {
     private static final String SHORT_DESCRIPTION = "Potion";
+    private static final String LOG_APPLYING = "Applying {} potion";
     private final int value;
     private final String name;
     private final String description;
+    private final Logger logger = LogManager.getLogger();
 
     /**
      * Creates a new instance
@@ -25,6 +29,7 @@ public class Potion implements Item {
 
     @Override
     public void apply(Player player) {
+        logger.debug(LOG_APPLYING, value);
         player.updateHealth(value);
     }
 

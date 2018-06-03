@@ -1,5 +1,7 @@
 package ru.spbau.des.roguelike.dom.characters;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.spbau.des.roguelike.dom.environment.Direction;
 import ru.spbau.des.roguelike.dom.environment.HitResult;
 import ru.spbau.des.roguelike.dom.environment.Position;
@@ -9,8 +11,6 @@ import ru.spbau.des.roguelike.dom.equipment.Armour;
 import ru.spbau.des.roguelike.dom.equipment.Weapon;
 import ru.spbau.des.roguelike.dom.environment.Field;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +20,12 @@ import java.util.List;
  */
 public class Player implements Unit {
     private final static int MAX_BAG_SIZE = 9;
+    private static final String LOG_APPLYING = "Applying {}";
+    private static final String LOG_RECEIVED = "Received {}";
+    private static final String LOG_ATTACKING = "Attacking unit at ({}, {})";
+    private static final String LOG_MOVED = "Player moved to ({}, {})";
+    private static final String LOG_DIED = "Player died";
+    private static final String LOG_HEALTH_UPDATED = "Player health updated: {}";
 
     private Armour armour;
     private Weapon weapon;
@@ -28,6 +34,7 @@ public class Player implements Unit {
     private Position position;
     private Field field;
     private final LinkedList<Item> bag = new LinkedList<>();
+    private Logger logger = LogManager.getLogger();
 
     public Player(Armour armour, Weapon weapon, int health) {
         this.armour = armour;
@@ -54,8 +61,10 @@ public class Player implements Unit {
      */
     public void updateHealth(int delta) {
         health += delta;
+        logger.debug(LOG_HEALTH_UPDATED, health);
         if (health <= 0) {
             dead = true;
+            logger.debug(LOG_DIED);
         }
     }
 
@@ -90,8 +99,11 @@ public class Player implements Unit {
         Position nextPosition = position.resolve(step);
         if (field.free(nextPosition)) {
             move(nextPosition);
+            logger.debug(LOG_MOVED, position.getX(), position.getY());
             return null;
         } else {
+            logger.debug(LOG_ATTACKING,
+                    nextPosition.getX(), nextPosition.getY());
             Unit target = field.get(nextPosition);
             HitResult hitResult = weapon.hit(target);
             if (target.isDead()) {
@@ -114,6 +126,7 @@ public class Player implements Unit {
     }
 
     public void addItem(Item item){
+        logger.debug(LOG_RECEIVED, item.getName());
         if (bag.size() == MAX_BAG_SIZE) {
             bag.pollLast();
         }
@@ -123,6 +136,7 @@ public class Player implements Unit {
     public void applyItem(int index) {
         if (index < bag.size()) {
             Item activeItem = bag.get(index);
+            logger.debug(LOG_APPLYING, activeItem.getName());
             bag.remove(index);
             activeItem.apply(this);
         }

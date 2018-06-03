@@ -1,5 +1,7 @@
 package ru.spbau.des.roguelike.dom.characters;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.spbau.des.roguelike.dom.environment.Direction;
 import ru.spbau.des.roguelike.dom.environment.HitResult;
 import ru.spbau.des.roguelike.dom.environment.Position;
@@ -13,12 +15,15 @@ import ru.spbau.des.roguelike.dom.environment.Field;
  */
 public class Monster implements Unit {
     private final static int MAX_CHASE_DIST = 8;
+    private static final String LOG_ATTACKS = "Monster {} attacks ({}, {})";
+    private static final String LOG_DIED = "Monster {} died at ({}, {})";
 
     private final int id;
     private final int power;
     private int health;
     private boolean dead;
     private Position position;
+    private Logger logger = LogManager.getLogger();
 
     public Monster(int id, int power, int health, Position position) {
         this.id = id;
@@ -33,6 +38,7 @@ public class Monster implements Unit {
         health -= strength;
         if (health <= 0) {
             dead = true;
+            logger.debug(LOG_DIED, id, position.getX(), position);
             return new ScoreResult(this.power);
         }
         return null;
@@ -67,6 +73,7 @@ public class Monster implements Unit {
         Position targetPosition = position.resolve(chosenDirection);
         if (distance == 1) {
             field.get(targetPosition).takeHit(power);
+            logger.debug(LOG_ATTACKS, id, targetPosition.getX(), targetPosition.getY());
         } else {
             field.move(position, chosenDirection);
             position = targetPosition;
